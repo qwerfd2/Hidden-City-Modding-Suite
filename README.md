@@ -1,6 +1,6 @@
 # Hidden-City-Modding-Suite
 
-Two scripts that can extract the content of ```.v_sf``` files for The Hidden City - Hidden Mystery, and another script that can decrypt the ```save_data.xml``` save file.
+A script that can extract the content of ```.v_sf``` files for The Hidden City - Hidden Mystery, and another script that can decrypt the ```save_data.xml``` save file.
 
 ---
 
