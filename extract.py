@@ -68,7 +68,7 @@ def extract(file_name):
             file_count = 0
 
             #New file extensions must be added here.
-            extensions = [".jpg", ".png", ".map", ".bin", ".xml", ".msk", "aaaaaa", ".lvl", ".mgcol", ".bat", "-1.png", ".txt", ".m3"]
+            extensions = [".jpg", ".png", ".map", ".bin", ".xml", ".msk", "aaaaaa", ".lvl", ".mgcol", ".bat", "-1.png", ".txt", ".m3", ".particle", ".mp4", ".gitkeep"]
             file_list = []
             file_len = len(data_bytes)
             while index < len(data_bytes):
@@ -147,6 +147,8 @@ if file_name == 'all':
     for file in os.listdir(os.path.dirname(__file__)):
         if file.endswith(".v_sf"):
             extract(file)
-    print("final length: ", test_global_distance)
+    #Again, final printer for biggest bound reached.
+    #
+    #print("final length: ", test_global_distance)
 else:
     extract(file_name)
