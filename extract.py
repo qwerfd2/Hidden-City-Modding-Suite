@@ -7,9 +7,9 @@ import json
 # This script is commented since I'm not happy with my implementation. It works but it is stupid. You're welcomed to improve its 
 # performance and I will help you with the file structure.
 #
-#.v_sf follows this structure:
+#.v_sf follows the below structure:
 #
-# Header: 00 00 00 00 00 00 00 00 06 0E 00 00. first 8 bytes are always 00, followed by file counts (0E 06 = 3590 files)
+# Header: 00 00 00 00 00 00 00 00 06 0E 00 00. first 8 bytes are 00 always, followed by file counts (0E 60 = 3680 files)
 #
 # Individual files: first file:
 #30 52 00 00 38 00 00 00 //file length: 52 30, file type: 38 (unused)
@@ -25,8 +25,8 @@ import json
 #be removed.
 #
 #My implementation is slow because I need to manually check whether a file name has terminated using file extensions, since there is no 
-#offseting, and some files have format like .xml.map, which necessitates looping after the first extension. The game obviously doesn't 
-#do that, so improvements are definitely possible - maybe use regex?
+#offseting, and some files have format like .xml.map, which necessitates looping. The game obviously doesn't do that, so improvements
+#are definitely possible - maybe regex?
 #
 #Furthermore this implementation is more vulnerable to future changes - all file formats must be specified in "extensions" or else the 
 #program crashes. A traverse limit of 150 bytes have been set to improve performance somewhat, but if the file name is longer than that
@@ -39,11 +39,13 @@ if len(sys.argv) < 3:
 
 file_name = sys.argv[1]
 save_path = sys.argv[2]
+test_global_distance = 0
 if file_name[-5:] != '.v_sf' and file_name != 'all':
     print("Input file name invalid.\nUsage: python", sys.argv[0], "pack.v_sf/all output_dir")
     quit()
 
 def extract(file_name):
+    global test_global_distance
     print("Opening", file_name, ".")
     
     #Use this to skip files already processed. temp.sav must be created, containing a [].
@@ -91,6 +93,12 @@ def extract(file_name):
                         distance.append({"ext": ext, "dist": dist})
                 if distance:
                     distance = sorted(distance, key=lambda x: x["dist"])
+                    
+                    #This code checks for longest file names. If new file name is longer than 150 bound would need  to be increased.
+                    #
+                    #if distance[0]['dist'] > test_global_distance:
+                    #    test_global_distance = distance[0]['dist']
+                    #    print("New dist reached:", test_global_distance)
                     for i in range(len(distance)):
                         if i == len(distance)-1 or distance[i+1]["dist"] > distance[i]["dist"] + len(distance[i]["ext"]):
                             filename = data_bytes[index:index+distance[i]["dist"]+len(distance[i]["ext"])].decode('ascii')
@@ -139,5 +147,6 @@ if file_name == 'all':
     for file in os.listdir(os.path.dirname(__file__)):
         if file.endswith(".v_sf"):
             extract(file)
+    print("final length: ", test_global_distance)
 else:
     extract(file_name)
