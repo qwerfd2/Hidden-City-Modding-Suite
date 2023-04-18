@@ -74,12 +74,14 @@ def extract(file_name):
                     break
                 file_count += 1
                 file_length = int(data_bytes[index:index+4][::-1].hex(), 16)
-                
+
                 #Unused.
                 file_type = int(data_bytes[index+4:index+8][::-1].hex(), 16)
                 index += 8
                 filename = ""
                 distance = []
+
+                #Traverse boundary. Removing this will result in very slow extraction for large files.
                 bound = 150
                 if index + 150 > file_len:
                     bound = file_len - index
@@ -94,7 +96,7 @@ def extract(file_name):
                             filename = data_bytes[index:index+distance[i]["dist"]+len(distance[i]["ext"])].decode('ascii')
                             break
                 if filename == "":
-                    raise ValueError("Warning: Unknown file extension from", data_bytes[index:index+30].decode('utf-8'))
+                    raise ValueError("Warning: Unknown file extension from", data_bytes[index:index+bound].decode('utf-8'))
 
                 start_offset = int(data_bytes[index+len(filename):index+4+len(filename)][::-1].hex(), 16)
                 index += 4 + len(filename)
