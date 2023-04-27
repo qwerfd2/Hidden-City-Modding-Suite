@@ -10,6 +10,7 @@ import json
 #.v_sf follows the below structure:
 #
 # Header: 00 00 00 00 00 00 00 00 06 0E 00 00. first 8 bytes are 00 always, followed by file counts (0E 60 = 3680 files)
+#This part is largely perfect.
 #
 # Individual files: first file:
 #30 52 00 00 38 00 00 00 //file length: 52 30, file type: 38 (unused)
@@ -23,6 +24,7 @@ import json
 #
 #After what I call "metadata", files are piled together according to the start offset and length. To sync the numbers up metadata must
 #be removed.
+#This part is largely perfect as well.
 #
 #My implementation is slow because I need to manually check whether a file name has terminated using file extensions, since there is no 
 #offseting, and some files have format like .xml.map, which necessitates looping. The game obviously doesn't do that, so improvements
