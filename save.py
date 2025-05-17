@@ -1,5 +1,7 @@
 import os
 import sys
+import zlib
+import xml.etree.ElementTree as ET
 
 if len(sys.argv) < 2:
     print("Command line invalid.\nUsage: python", sys.argv[0], "d/e")
@@ -72,3 +74,24 @@ with open(write_file, "wb") as output_file:
     output_file.write(output_data)
 
 print(write_file, "saved to the same directory.")
+
+def file_crc32(filepath):
+    crc = 0
+    with open(filepath, 'rb') as f:
+        for chunk in iter(lambda: f.read(4096), b''):
+            crc = zlib.crc32(chunk, crc)
+    return crc & 0xFFFFFFFF
+
+save_data_path = os.path.join(folder_path, write_file)
+if os.path.exists(save_data_path):
+    crc = file_crc32(save_data_path)
+    root = ET.Element("root")
+    file_elem = ET.SubElement(root, "file")
+    file_elem.set("name", "save_data.xml")
+    file_elem.set("hash", str(crc))
+    tree = ET.ElementTree(root)
+    hash_file_path = os.path.join(folder_path, "save_hash.xml")
+    tree.write(hash_file_path, encoding="utf-8", xml_declaration=True)
+    print("CRC32 hash written to save_hash.xml.")
+else:
+    print("save_data.xml not found, skipping CRC32 hash generation.")
