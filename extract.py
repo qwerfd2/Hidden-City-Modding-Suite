@@ -70,7 +70,7 @@ def extract(file_name):
             file_count = 0
 
             #New file extensions must be added here.
-            extensions = [".jpg", ".png", ".map", ".bin", ".xml", ".msk", "aaaaaa", ".lvl", ".mgcol", ".bat", "-1.png", ".txt", ".m3", ".particle", ".mp4", ".gitkeep"]
+            extensions = [".jpg", ".png", ".map", ".bin", ".xml", ".msk", "aaaaaa", ".lvl", ".mgcol", ".bat", "-1.png", ".txt", ".m3", ".particle", ".mp4", ".gitkeep", ".tmx"]
             file_list = []
             file_len = len(data_bytes)
             while index < len(data_bytes):
@@ -104,6 +104,7 @@ def extract(file_name):
                     for i in range(len(distance)):
                         if i == len(distance)-1 or distance[i+1]["dist"] > distance[i]["dist"] + len(distance[i]["ext"]):
                             filename = data_bytes[index:index+distance[i]["dist"]+len(distance[i]["ext"])].decode('ascii')
+                            print(filename)
                             break
                 if filename == "":
                     raise ValueError("Warning: Unknown file extension from", data_bytes[index:index+bound].decode('utf-8'))
